@@ -789,7 +789,7 @@ LQt.prototype.setAs = function(o){
     this.w = o.w;
 };
 
-//poly: LV3, angle: Number
+//pole: LV3, angle: Number
 LQt.fromPole = function(pole, angle){
     angle /= (2.0*LV2.rad2deg);
     ret = LQt.zero();

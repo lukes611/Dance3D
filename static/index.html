@@ -9,6 +9,7 @@
     <script src="js/loqur/L3DOb.js"></script>
     <script src="js/loqur/three.js"></script>
     <script src="js/loqur/LVR.js"></script>
+    <script src="js/loqur/LSkeleton.js"></script>
 
   </head>
   <body>
@@ -19,10 +20,9 @@ todo:
   LBone:
     +parent
     +location
-    +qt
+    +rotation/->qt
     +length
     +base-radius
-    +end-radius
     static:getModel (ball + curved)
 
     </pre>
@@ -32,60 +32,24 @@ var renderer = new THREE.WebGLRenderer({antialias : true});
 renderer.setSize(300,300);
 $(document.body).append(renderer.domElement);
 
-function boneModel(size, length){
-  var ret = new L3DOb();
-  var hs = size / 2;
-  ret.verts.push(new LV3(-hs, -hs, hs));
-  ret.verts.push(new LV3(hs, -hs, hs));
-  ret.verts.push(new LV3(hs, hs, hs));
-  ret.verts.push(new LV3(-hs, hs, hs));
-  ret.verts.push(new LV3(-hs, -hs, -hs));
-  ret.verts.push(new LV3(hs, -hs, -hs));
-  ret.verts.push(new LV3(hs, hs, -hs));
-  ret.verts.push(new LV3(-hs, hs, -hs));
-  ret.verts.push(new LV3(length, 0, 0));
 
 
-  //front
-  ret.faces.push([0,1,2]);
-  ret.faces.push([0,2,3]);
-  //back:
-  ret.faces.push([4,7,6]);
-  ret.faces.push([4,6,5]);
-  //l-side:
-  ret.faces.push([0,3,7]);
-  ret.faces.push([0,7,4]);
-  //r-side:
-  //ret.faces.push([2,6,1]);
-  //ret.faces.push([6,5,1]);
-  //top:
-  ret.faces.push([3,2,6]);
-  ret.faces.push([3,6,7]);
-  //bottom:
-  ret.faces.push([4,5,0]);
-  ret.faces.push([0,5,1]);
-
-  //pyra#1
-  ret.faces.push([1,8,2]);
-  ret.faces.push([2,8,6]);
-  ret.faces.push([5,6,8]);
-  ret.faces.push([1,5,8]);
-
-
-  return ret;
-}
-
-var bone = boneModel(10, 100);
+var ng = 90;
 
 (function render(){
     var scene = new THREE.Scene();
-    var light = new THREE.AmbientLight( 0x050505 , 10); // soft white light
+    var light = new THREE.AmbientLight( 0x404040 , 2); // soft white light
     scene.add( light );
 
-    var dirLight = new THREE.DirectionalLight(0xffffff, 10);
-    dirLight.position.set(1, 1, 1);
+    var dirLight = new THREE.DirectionalLight(0xffffff, 15);
+    dirLight.position.set(0, 1, 0);
     scene.add(dirLight);
-    scene.add(bone.tjs({color : 'white'}));
+    var bone = new LBone(null, 10, 60, new LV3(0,0,0), new LV3(0,ng++,0));
+    var bone2 = new LBone(bone, 8, 30, new LV3(0,0,0), new LV3(0,Math.sin(ng/10) * 10, 0));
+    var bone3 = new LBone(bone2, 2, 20, new LV3(0,0,0), new LV3(0,0,Math.sin(ng/80) * 80));
+    scene.add(bone.getModel().tjs({color : 'white'}));
+    scene.add(bone2.getModel().tjs({color : 'red'}));
+    scene.add(bone3.getModel().tjs({color : 'blue'}));
 /*
     if(cont.drawEditor){
         var ob = createArm(100);
@@ -106,7 +70,7 @@ var bone = boneModel(10, 100);
 */
     var center = new LV3(0,0,0);
     var size = renderer.getSize();
-    var cam = L3DOb.cadCam(size.width, size.height, 90 , 10, 50);
+    var cam = L3DOb.cadCam(size.width, size.height, 90 , 10, 200);
     renderer.render( scene, cam);
     requestAnimationFrame( render );
 })();
