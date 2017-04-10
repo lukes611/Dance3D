@@ -314,7 +314,7 @@ L3DOb.prototype.tjs = function(settings){
                 map: THREE.ImageUtils.loadTexture(s.texture)
             });
         }else{
-            new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture(s.texture) } );
+            mat = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture(s.texture) } );
         }
     }else{
         if(s.basicShading){
@@ -322,7 +322,8 @@ L3DOb.prototype.tjs = function(settings){
                 color : s.color
             });
         }else{
-            new THREE.MeshPhongMaterial({
+
+            mat = new THREE.MeshPhongMaterial({
                 color: s.color,
                 shininess: 10,
                 specular: 0x111111,
@@ -348,7 +349,7 @@ L3DOb.prototype.tjs = function(settings){
                          new THREE.Vector2(this.textures[this.texInds[i][2]].x, this.textures[this.texInds[i][2]].y)]);
         }
     }
-    g.computeBoundingSphere();
+  g.computeBoundingSphere();
 	g.computeFaceNormals();
 	return new THREE.Mesh(g, mat);
 
@@ -385,7 +386,7 @@ L3DOb.isoCam = function(screenWidth, screenHeight, origin){
 };
 
 L3DOb.cadCam = function(screenWidth, screenHeight, ry, rx, rad){
-    var ret = new THREE.PerspectiveCamera(75, screenWidth / screenHeight, 0.01, 1000000);
+    var ret = new THREE.PerspectiveCamera(75, screenWidth / screenHeight, 0.01, 100000);
 
     var yRV = LV2.fromAngle(ry);
     var xRV = LV2.fromAngle(rx);
@@ -395,7 +396,7 @@ L3DOb.cadCam = function(screenWidth, screenHeight, ry, rx, rad){
     cameraLocation = cameraLocation.scale(xRV.x).add(up.scale(xRV.y));
     cameraLocation.iscale(rad);
 
-    ret.up.set(0,-1,0);
+    ret.up.set(0,1,0);
     ret.position.set(cameraLocation.x, cameraLocation.y, cameraLocation.z);
     ret.lookAt(new THREE.Vector3(0,0,0));
 
