@@ -229,6 +229,10 @@ LV3.prototype.toString = function(){
 	return '[' + this.x + ',' + this.y + ',' + this.z + ']';
 };
 
+LV3.fromJSON = function(ob){
+	return new LV3(ob.x, ob.y, ob.z);
+};
+
 LV3.prototype.copy = function(){
 	return new LV3(this.x, this.y, this.z);
 };
@@ -278,6 +282,15 @@ LV3.prototype.iscale = function(s){
 LV3.prototype.div = function(s){
 	return new LV3(this.x / s, this.y / s, this.z / s);
 };
+
+LV3.prototype.interpolateTo = function(target, time){
+	var to = target.copy();
+	to.isub(this);
+	to.iscale(time);
+	to.iadd(this);
+	return to;
+};
+
 
 LV3.prototype.idiv = function(s){
 	this.x /= s;

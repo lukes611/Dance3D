@@ -1,13 +1,27 @@
 
 
-function LBone(parent, baseSize, length, location, rotation){
+function LBone(id, parent, baseSize, length, location, rotation){
+  this.id = id;
   this.parent = parent;
   this.location = location.copy();
   this.rotation = rotation.copy();
   this.length = length;
   this.base = baseSize;
-  this.children = [];
 }
+
+LBone.prototype.copy = function(){
+  return new LBone(this.id, this.parent, this.base, this.length, this.location, this.rotation);
+};
+
+LBone.prototype.toString = function(){
+  return JSON.stringify({id:this.id, location:this.location,rotation:this.rotation,length:this.length,base:this.base});
+};
+
+LBone.fromString = function(s, parent){
+  parent = parent || null;
+  var ob = JSON.parse(s);
+  return new LBone(ob.id, parent, ob.base, ob.length, LV3.fromJSON(ob.location), LV3.fromJSON(ob.rotation));
+};
 
 LBone.prototype.qt = function(){
   if(this.parent == null) return LQt.rotation(this.rotation.x, this.rotation.y, this.rotation.z);

@@ -18,13 +18,10 @@ dancer
 todo:
 1. create bone - object
   LBone:
-    +parent
-    +location
-    +rotation/->qt
-    +length
-    +base-radius
-    static:getModel (ball + curved)
-
+    interpolateTo()
+  Skeleton:
+    root
+    name|id for each sub-bone
     </pre>
 
 <script type="text/javascript">
@@ -35,6 +32,9 @@ $(document.body).append(renderer.domElement);
 
 
 var ng = 90;
+var b0 = new LBone('root', null, 5, 50, new LV3(0,0,0), new LV3(0,20,50));
+var bb;
+console.log(b0.toString());
 
 (function render(){
     var scene = new THREE.Scene();
@@ -44,12 +44,18 @@ var ng = 90;
     var dirLight = new THREE.DirectionalLight(0xffffff, 15);
     dirLight.position.set(0, 1, 0);
     scene.add(dirLight);
-    var bone = new LBone(null, 10, 60, new LV3(0,0,0), new LV3(0,ng++,0));
-    var bone2 = new LBone(bone, 8, 30, new LV3(0,0,0), new LV3(0,Math.sin(ng/10) * 10, 0));
-    var bone3 = new LBone(bone2, 2, 20, new LV3(0,0,0), new LV3(0,0,Math.sin(ng/80) * 80));
+    var bone = new LBone('b1', null, 10, 60, new LV3(30,0,0), new LV3(0,-80,0));
+    var bone2 = new LBone('b2', bone, 8, 30, new LV3(10,0,10), new LV3(0,Math.sin(ng/10) * 10, 0));
+    var bone3 = new LBone('b3', bone, 2, 20, new LV3(10,0,-10), new LV3(0,0,Math.sin(ng/80) * 80));
     scene.add(bone.getModel().tjs({color : 'white'}));
     scene.add(bone2.getModel().tjs({color : 'red'}));
     scene.add(bone3.getModel().tjs({color : 'blue'}));
+
+    bb = b0.toString();
+    bb = LBone.fromString(bb);
+    bb.rotation.z = 0;
+    scene.add(b0.getModel().tjs({color : 'orange'}));
+    scene.add(bb.getModel().tjs({color : 'purple'}));
 /*
     if(cont.drawEditor){
         var ob = createArm(100);
@@ -70,7 +76,7 @@ var ng = 90;
 */
     var center = new LV3(0,0,0);
     var size = renderer.getSize();
-    var cam = L3DOb.cadCam(size.width, size.height, 90 , 10, 200);
+    var cam = L3DOb.cadCam(size.width, size.height, 90 , 10, 100);
     renderer.render( scene, cam);
     requestAnimationFrame( render );
 })();
