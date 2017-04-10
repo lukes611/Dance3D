@@ -35,8 +35,8 @@ LMat
 	dist
 	imult
 	multLV2
-	multLV3	
-	
+	multLV3
+
 	static functions:
 		rot/x/y/z
 		scale
@@ -161,7 +161,7 @@ LV2.prototype.ifloor = function(){
 
 LV2.prototype.unit = function(){
 	var m = Math.sqrt(this.x * this.x + this.y * this.y);
-	return new LV2(this.x / m, this.y / m);	
+	return new LV2(this.x / m, this.y / m);
 };
 
 LV2.prototype.iunit = function(){
@@ -344,14 +344,14 @@ LV3.prototype.ifloor = function(){
 
 LV3.prototype.unit = function(){
 	var m = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-	return new LV3(this.x / m, this.y / m, this.z / m);	
+	return new LV3(this.x / m, this.y / m, this.z / m);
 };
 
 LV3.prototype.iunit = function(){
 	var m = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
 	this.x /= m;
 	this.y /= m;
-	this.z /= m;	
+	this.z /= m;
 };
 
 LV3.fromString = function(string){
@@ -381,7 +381,7 @@ LMat3.prototype.set = function(r, c, v){
 
 
 LMat3.prototype.toString = function(){
-	return '|' + this.arr[0] + ',' + this.arr[1] + ',' + this.arr[2] + '|\n' + 
+	return '|' + this.arr[0] + ',' + this.arr[1] + ',' + this.arr[2] + '|\n' +
 		   '|' + this.arr[3] + ',' + this.arr[4] + ',' + this.arr[5] + '|\n' +
 		   '|' + this.arr[6] + ',' + this.arr[7] + ',' + this.arr[8] + '|\n';
 };
@@ -394,7 +394,7 @@ LMat3.prototype.itranspose = function(){
 	this.arr = [
 		this.arr[0], this.arr[3], this.arr[6],
 		this.arr[1], this.arr[4], this.arr[7],
-		this.arr[2], this.arr[5], this.arr[8] 
+		this.arr[2], this.arr[5], this.arr[8]
 	];
 };
 
@@ -402,7 +402,7 @@ LMat3.prototype.transpose = function(){
 	return new LMat3([
 		this.arr[0], this.arr[3], this.arr[6],
 		this.arr[1], this.arr[4], this.arr[7],
-		this.arr[2], this.arr[5], this.arr[8] 
+		this.arr[2], this.arr[5], this.arr[8]
 	]);
 };
 
@@ -419,7 +419,7 @@ LMat3.prototype.imult = function(m){
 
 		this.arr[6] * m.arr[0] + this.arr[7] * m.arr[3] + this.arr[8] * m.arr[6],
 		this.arr[6] * m.arr[1] + this.arr[7] * m.arr[4] + this.arr[8] * m.arr[7],
-		this.arr[6] * m.arr[2] + this.arr[7] * m.arr[5] + this.arr[8] * m.arr[8], 
+		this.arr[6] * m.arr[2] + this.arr[7] * m.arr[5] + this.arr[8] * m.arr[8],
 	];
 };
 
@@ -435,8 +435,8 @@ LMat3.prototype.mult = function(m){
 
 		this.arr[6] * m.arr[0] + this.arr[7] * m.arr[3] + this.arr[8] * m.arr[6],
 		this.arr[6] * m.arr[1] + this.arr[7] * m.arr[4] + this.arr[8] * m.arr[7],
-		this.arr[6] * m.arr[2] + this.arr[7] * m.arr[5] + this.arr[8] * m.arr[8], 
-	]);	
+		this.arr[6] * m.arr[2] + this.arr[7] * m.arr[5] + this.arr[8] * m.arr[8],
+	]);
 };
 
 
@@ -571,7 +571,7 @@ LMat3.coFactor = function(a, n){
     return b;
 }
 
-	
+
 //LMat4
 function LMat4(inp){
 	if(inp === undefined)
@@ -584,9 +584,9 @@ function LMat4(inp){
 }
 
 LMat4.prototype.toString = function(){
-	return '|' + this.arr[0] + ',' + this.arr[1] + ',' + this.arr[2] + ',' + this.arr[3] + '|\n' + 
-		   '|' + this.arr[4] + ',' + this.arr[5] + ',' + this.arr[6] + ',' + this.arr[7] + '|\n' + 
-		   '|' + this.arr[8] + ',' + this.arr[9] + ',' + this.arr[10] + ',' + this.arr[11] + '|\n' + 
+	return '|' + this.arr[0] + ',' + this.arr[1] + ',' + this.arr[2] + ',' + this.arr[3] + '|\n' +
+		   '|' + this.arr[4] + ',' + this.arr[5] + ',' + this.arr[6] + ',' + this.arr[7] + '|\n' +
+		   '|' + this.arr[8] + ',' + this.arr[9] + ',' + this.arr[10] + ',' + this.arr[11] + '|\n' +
 		   '|' + this.arr[12] + ',' + this.arr[13] + ',' + this.arr[14] + ',' + this.arr[15] + '|\n';
 };
 
@@ -663,7 +663,7 @@ LMat4.prototype.imult = function(m){
 		this.arr[12]*m.arr[1] + this.arr[13]*m.arr[5] + this.arr[14]*m.arr[9] + this.arr[15]*m.arr[13],
 		this.arr[12]*m.arr[2] + this.arr[13]*m.arr[6] + this.arr[14]*m.arr[10] + this.arr[15]*m.arr[14],
 		this.arr[12]*m.arr[3] + this.arr[13]*m.arr[7] + this.arr[14]*m.arr[11] + this.arr[15]*m.arr[15]
-		
+
 	];
 };
 
@@ -688,7 +688,7 @@ LMat4.prototype.mult = function(m){
 		this.arr[12]*m.arr[1] + this.arr[13]*m.arr[5] + this.arr[14]*m.arr[9] + this.arr[15]*m.arr[13],
 		this.arr[12]*m.arr[2] + this.arr[13]*m.arr[6] + this.arr[14]*m.arr[10] + this.arr[15]*m.arr[14],
 		this.arr[12]*m.arr[3] + this.arr[13]*m.arr[7] + this.arr[14]*m.arr[11] + this.arr[15]*m.arr[15]
-		
+
 	]);
 };
 
@@ -701,7 +701,7 @@ LMat4.prototype.multLV3 = function(p){
 
 
 LMat4.scale = function(scalar){
-	return new LMat4([scalar, 0, 0, 0, 
+	return new LMat4([scalar, 0, 0, 0,
 					  0, scalar, 0, 0,
 					  0, 0, scalar, 0,
 					  0, 0, 0, 1]);
