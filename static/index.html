@@ -57,21 +57,69 @@ renderer.setSize(300,300);
 $(document.body).append(renderer.domElement);
 
 var mySkeleton = new LSkeleton();
-mySkeleton.add(new LBone('root', null, 2, 20, new LV3(0,0,0)));
-mySkeleton.add(new LBone('tip', null, 2, 16, new LV3(0,0,0)), 'root');
-//var b0 = new LBone('root', null, 5, 50, new LV3(0,0,0), new LV3(0,20,50));
+var L = 6, B = 1;
+mySkeleton.add(new LBone('spine1', null, B, L, new LV3(0,-30,0)));
+mySkeleton.byId('spine1').rotate(0,-90,0);
+mySkeleton.byId('spine1').rotate(0,0,90);
+
+mySkeleton.add(new LBone('spine2', null, B, L, new LV3(0,0,0)), 'spine1');
+mySkeleton.byId('spine2').rotate(0,0,-5);
+mySkeleton.add(new LBone('spine3', null, B, L, new LV3(0,0,0)), 'spine2');
+mySkeleton.byId('spine3').rotate(0,0,-5);
+mySkeleton.add(new LBone('spine4', null, B, L, new LV3(0,0,0)), 'spine3');
+mySkeleton.byId('spine4').rotate(0,0,-5);
+
+mySkeleton.add(new LBone('rshoulder1', null, B, L/2, new LV3(0,0,0)), 'spine4');
+mySkeleton.byId('rshoulder1').rotate(0,-90,0);
+mySkeleton.byId('rshoulder1').rotate(-90,0,0);
+mySkeleton.byId('rshoulder1').rotate(0,0,30);
+
+mySkeleton.add(new LBone('rshoulder2', null, B, L/2, new LV3(0,0,0)), 'rshoulder1');
+mySkeleton.byId('rshoulder2').rotate(0,0,-20);
+
+mySkeleton.add(new LBone('rarm1', null, B, L, new LV3(0,0,0)), 'rshoulder2');
+mySkeleton.byId('rarm1').rotate(0,0,-90);
+
+
+mySkeleton.add(new LBone('lshoulder1', null, B, L/2, new LV3(0,0,0)), 'spine4');
+mySkeleton.byId('lshoulder1').rotate(0,0,-90);
+mySkeleton.byId('lshoulder1').rotate(0,90,0);
+mySkeleton.byId('lshoulder1').rotate(0,0,30);
+
+
+
+
+mySkeleton.add(new LBone('neck', null, B, L, new LV3(0,0,0)), 'spine4');
+mySkeleton.byId('neck').rotate(0,0,10);
+
+var camera = {
+  r : 50,
+  y : -90,
+  x : 0
+};
 
 var d = new LDevice();
 d.keyBoard(window, function(o){
+  var is = x => x == String.fromCharCode(o.code);
   var am = 2;
-  if(o.code == '1'.charCodeAt(0)) mySkeleton.byId('root').rotate(-am,0,0);
-  if(o.code == '2'.charCodeAt(0)) mySkeleton.byId('root').rotate(am,0,0);
-  if(o.code == '3'.charCodeAt(0)) mySkeleton.byId('root').rotate(0,-am,0);
-  if(o.code == '4'.charCodeAt(0)) mySkeleton.byId('root').rotate(0,am,0);
-  if(o.code == '5'.charCodeAt(0)) mySkeleton.byId('root').rotate(0,0,-am);
-  if(o.code == '6'.charCodeAt(0)) mySkeleton.byId('root').rotate(0,0,am);
-  if(o.code == '7'.charCodeAt(0)) mySkeleton.byId('root').qt.iscale(0);
-  if(o.code == '8'.charCodeAt(0)) console.log(mySkeleton.byId('root').qt);
+  var n = 'rshoulder1'
+  if(is('1')) mySkeleton.byId(n).rotate(-am,0,0);
+  if(o.code == '2'.charCodeAt(0)) mySkeleton.byId(n).rotate(am,0,0);
+  if(o.code == '3'.charCodeAt(0)) mySkeleton.byId(n).rotate(0,-am,0);
+  if(o.code == '4'.charCodeAt(0)) mySkeleton.byId(n).rotate(0,am,0);
+  if(o.code == '5'.charCodeAt(0)) mySkeleton.byId(n).rotate(0,0,-am);
+  if(o.code == '6'.charCodeAt(0)) mySkeleton.byId(n).rotate(0,0,am);
+  if(o.code == '7'.charCodeAt(0)) mySkeleton.byId(n).qt = LQt.rotation(0,0,0);
+  if(o.code == '8'.charCodeAt(0)) console.log(mySkeleton.byId(n).qt);
+
+  var ram = 1;
+  //console.log(String.fromCharCode(o.code));
+  if(is('Z')) camera.r += ram;
+  if(is('X')) camera.r -= ram;
+
+  if(is('J')) camera.y += ram;
+  if(is('L')) camera.y -= ram;
+
 
 });
 
@@ -88,18 +136,23 @@ d.keyBoard(window, function(o){
     scene.add(dirLight);
 
 
-
+    var colors = {
+      neck : 'red',
+      lshoulder1 : 'orange'
+    };
     mySkeleton.bones.forEach(b => {
-          scene.add(b.getModel().tjs({color : 'green'}));
+          var col = colors[b.id] || 'green';
+          scene.add(b.getModel().tjs({color : col}));
           var tip = b.tip();
-          scene.add(generateCube({position: [tip.x,tip.y, tip.z], color : 'blue', size:[5, 1, 1]}));
+          //scene.add(generateCube({position: [tip.x,tip.y, tip.z], color : 'blue', size:[5, 1, 1]}));
 
     });
 
 
     var center = new LV3(0,0,0);
     var size = renderer.getSize();
-    var cam = L3DOb.cadCam(size.width, size.height, 90 , 10, 50);
+    var cam = L3DOb.cadCam(size.width, size.height, camera.y , camera.x, camera.r);
+    //ng += 2;
     renderer.render( scene, cam);
     requestAnimationFrame( render );
 })();
