@@ -68,6 +68,9 @@ var neckLength = 5 / scalar;
 var spineLength = (21.5 / 4) / scalar;
 var leg1Length = 16 / scalar;
 var leg2Length = 14.5 / scalar;
+var hipLength = 4 / scalar;
+var footLength = 7 / scalar;
+var headLength = 9.5 / scalar;
 
 mySkeleton.add(new LBone('root', null, B, 0.2, new LV3(0,0,0)));
 
@@ -81,6 +84,14 @@ mySkeleton.add(new LBone('spine3', null, B, spineLength, new LV3(0,0,0)), 'spine
 mySkeleton.byId('spine3').rotate(0,0,-5);
 mySkeleton.add(new LBone('spine4', null, B, spineLength, new LV3(0,0,0)), 'spine3');
 mySkeleton.byId('spine4').rotate(0,0,-5);
+
+mySkeleton.add(new LBone('neck', null, B, neckLength, new LV3(0,0,0)), 'spine4');
+mySkeleton.byId('neck').rotate(0,0,10);
+
+
+mySkeleton.add(new LBone('head', null, B, headLength, new LV3(0,0,0)), 'neck');
+//mySkeleton.byId('spine4').rotate(0,0,-5);
+
 
 mySkeleton.add(new LBone('rshoulder1', null, B, shoulder1Length, new LV3(0,0,0)), 'spine4');
 mySkeleton.byId('rshoulder1').rotate(0,-90,0);
@@ -120,16 +131,30 @@ mySkeleton.byId('lhand').rotate(0,-30,0);
 
 
 
-mySkeleton.add(new LBone('neck', null, B, neckLength, new LV3(0,0,0)), 'spine4');
-mySkeleton.byId('neck').rotate(0,0,10);
 
-mySkeleton.add(new LBone('rleg1', null, B, leg1Length, new LV3(-5,0,0)), 'root');
+mySkeleton.add(new LBone('rleg1', null, B, leg1Length, new LV3(-hipLength,0,0)), 'root');
 mySkeleton.byId('rleg1').rotate(90,0,0);
 mySkeleton.byId('rleg1').rotate(0,-90,0);
 mySkeleton.byId('rleg1').rotate(0,0,20);
 
 mySkeleton.add(new LBone('rleg2', null, B, leg2Length, new LV3(0,0,0)), 'rleg1');
 mySkeleton.byId('rleg2').rotate(0,0,-20);
+
+mySkeleton.add(new LBone('rfoot', null, B, footLength, new LV3(0,0,0)), 'rleg2');
+mySkeleton.byId('rfoot').rotate(0,0,90);
+
+
+mySkeleton.add(new LBone('lleg1', null, B, leg1Length, new LV3(hipLength,0,0)), 'root');
+mySkeleton.byId('lleg1').rotate(90,0,0);
+mySkeleton.byId('lleg1').rotate(0,-90,0);
+mySkeleton.byId('lleg1').rotate(0,0,20);
+
+mySkeleton.add(new LBone('lleg2', null, B, leg2Length, new LV3(0,0,0)), 'lleg1');
+mySkeleton.byId('lleg2').rotate(0,0,-20);
+
+mySkeleton.add(new LBone('lfoot', null, B, footLength, new LV3(0,0,0)), 'lleg2');
+mySkeleton.byId('lfoot').rotate(0,0,90);
+
 
 var camera = {
   r : 50,
