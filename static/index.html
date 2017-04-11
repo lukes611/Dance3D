@@ -58,38 +58,65 @@ $(document.body).append(renderer.domElement);
 
 var mySkeleton = new LSkeleton();
 var L = 6, B = 1;
-mySkeleton.add(new LBone('spine1', null, B, L, new LV3(0,-30,0)));
+var scalar = 1;
+var handLength = 5.5 / scalar;
+var arm2Length = 8.5 / scalar;
+var arm1Length = 11 / scalar;
+var shoulder1Length = 4 / scalar;
+var shoulder2Length = 4.5 / scalar;
+var neckLength = 5 / scalar;
+var spineLength = (21.5 / 4) / scalar;
+
+mySkeleton.add(new LBone('spine1', null, B, spineLength, new LV3(0,-10,0)));
 mySkeleton.byId('spine1').rotate(0,-90,0);
 mySkeleton.byId('spine1').rotate(0,0,90);
 
-mySkeleton.add(new LBone('spine2', null, B, L, new LV3(0,0,0)), 'spine1');
+mySkeleton.add(new LBone('spine2', null, B, spineLength, new LV3(0,0,0)), 'spine1');
 mySkeleton.byId('spine2').rotate(0,0,-5);
-mySkeleton.add(new LBone('spine3', null, B, L, new LV3(0,0,0)), 'spine2');
+mySkeleton.add(new LBone('spine3', null, B, spineLength, new LV3(0,0,0)), 'spine2');
 mySkeleton.byId('spine3').rotate(0,0,-5);
-mySkeleton.add(new LBone('spine4', null, B, L, new LV3(0,0,0)), 'spine3');
+mySkeleton.add(new LBone('spine4', null, B, spineLength, new LV3(0,0,0)), 'spine3');
 mySkeleton.byId('spine4').rotate(0,0,-5);
 
-mySkeleton.add(new LBone('rshoulder1', null, B, L/2, new LV3(0,0,0)), 'spine4');
+mySkeleton.add(new LBone('rshoulder1', null, B, shoulder1Length, new LV3(0,0,0)), 'spine4');
 mySkeleton.byId('rshoulder1').rotate(0,-90,0);
 mySkeleton.byId('rshoulder1').rotate(-90,0,0);
 mySkeleton.byId('rshoulder1').rotate(0,0,30);
 
-mySkeleton.add(new LBone('rshoulder2', null, B, L/2, new LV3(0,0,0)), 'rshoulder1');
+mySkeleton.add(new LBone('rshoulder2', null, B, shoulder2Length, new LV3(0,0,0)), 'rshoulder1');
 mySkeleton.byId('rshoulder2').rotate(0,0,-20);
 
-mySkeleton.add(new LBone('rarm1', null, B, L, new LV3(0,0,0)), 'rshoulder2');
+mySkeleton.add(new LBone('rarm1', null, B, arm1Length, new LV3(0,0,0)), 'rshoulder2');
 mySkeleton.byId('rarm1').rotate(0,0,-90);
 
+mySkeleton.add(new LBone('rarm2', null, B, arm2Length, new LV3(0,0,0)), 'rarm1');
+mySkeleton.byId('rarm2').rotate(0,30,0);
 
-mySkeleton.add(new LBone('lshoulder1', null, B, L/2, new LV3(0,0,0)), 'spine4');
+mySkeleton.add(new LBone('rhand', null, B, handLength, new LV3(0,0,0)), 'rarm2');
+mySkeleton.byId('rhand').rotate(0,30,0);
+
+
+mySkeleton.add(new LBone('lshoulder1', null, B, shoulder1Length, new LV3(0,0,0)), 'spine4');
 mySkeleton.byId('lshoulder1').rotate(0,0,-90);
 mySkeleton.byId('lshoulder1').rotate(0,90,0);
 mySkeleton.byId('lshoulder1').rotate(0,0,30);
 
+mySkeleton.add(new LBone('lshoulder2', null, B, shoulder2Length, new LV3(0,0,0)), 'lshoulder1');
+mySkeleton.byId('lshoulder2').rotate(0,0,-20);
+
+
+mySkeleton.add(new LBone('larm1', null, B, arm1Length, new LV3(0,0,0)), 'lshoulder2');
+mySkeleton.byId('larm1').rotate(0,0,-90);
+
+mySkeleton.add(new LBone('larm2', null, B, arm2Length, new LV3(0,0,0)), 'larm1');
+mySkeleton.byId('larm2').rotate(0,-30,0);
+
+mySkeleton.add(new LBone('lhand', null, B, handLength, new LV3(0,0,0)), 'larm2');
+mySkeleton.byId('lhand').rotate(0,-30,0);
 
 
 
-mySkeleton.add(new LBone('neck', null, B, L, new LV3(0,0,0)), 'spine4');
+mySkeleton.add(new LBone('neck', null, B, neckLength, new LV3(0,0,0)), 'spine4');
 mySkeleton.byId('neck').rotate(0,0,10);
 
 var camera = {
@@ -119,6 +146,8 @@ d.keyBoard(window, function(o){
 
   if(is('J')) camera.y += ram;
   if(is('L')) camera.y -= ram;
+  if(is('I')) camera.x += ram;
+  if(is('K')) camera.x -= ram;
 
 
 });
