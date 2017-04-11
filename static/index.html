@@ -25,16 +25,58 @@ todo:
     </pre>
 
 <script type="text/javascript">
+
+
+
+function generateCube(obj){
+    obj = obj || {};
+    obj.position = obj.position || [0,0,0];
+    obj.size = obj.size || [1,1,1];
+    obj.color = obj.color || 0x999999;
+    obj.rotation = obj.rotation || [0,0,0];
+
+    obj.rotation = obj.rotation.map(x => x / 57.3);
+
+    //console.log(obj.mass, obj.mass === undefined)
+    if(obj.mass === undefined) obj.mass = 1;
+    //obj.mass = obj.mass!==undefined ? 1 : mass;
+
+    var geometry = new THREE.BoxGeometry(obj.size[0],obj.size[1],obj.size[2]);
+    var material = new THREE.MeshPhongMaterial({color : obj.color});
+    var cube = new THREE.Mesh(geometry, material);
+    cube.position.set(obj.position[0],obj.position[1],obj.position[2]);
+    cube.rotation.set(obj.rotation[0],obj.rotation[1],obj.rotation[2]);
+    cube.castShadow = true;
+    cube.receiveShadow = true;
+
+    return cube;
+}
+
 var renderer = new THREE.WebGLRenderer({antialias : true});
 renderer.setSize(300,300);
 $(document.body).append(renderer.domElement);
 
+var mySkeleton = new LSkeleton();
+mySkeleton.add(new LBone('root', null, 2, 20, new LV3(0,0,0)));
+mySkeleton.add(new LBone('tip', null, 2, 16, new LV3(0,0,0)), 'root');
+//var b0 = new LBone('root', null, 5, 50, new LV3(0,0,0), new LV3(0,20,50));
+
+var d = new LDevice();
+d.keyBoard(window, function(o){
+  var am = 2;
+  if(o.code == '1'.charCodeAt(0)) mySkeleton.byId('root').rotate(-am,0,0);
+  if(o.code == '2'.charCodeAt(0)) mySkeleton.byId('root').rotate(am,0,0);
+  if(o.code == '3'.charCodeAt(0)) mySkeleton.byId('root').rotate(0,-am,0);
+  if(o.code == '4'.charCodeAt(0)) mySkeleton.byId('root').rotate(0,am,0);
+  if(o.code == '5'.charCodeAt(0)) mySkeleton.byId('root').rotate(0,0,-am);
+  if(o.code == '6'.charCodeAt(0)) mySkeleton.byId('root').rotate(0,0,am);
+  if(o.code == '7'.charCodeAt(0)) mySkeleton.byId('root').qt.iscale(0);
+  if(o.code == '8'.charCodeAt(0)) console.log(mySkeleton.byId('root').qt);
+
+});
 
 
-var ng = 90;
-var b0 = new LBone('root', null, 5, 50, new LV3(0,0,0), new LV3(0,20,50));
-var bb;
-console.log(b0.toString());
+
 
 (function render(){
     var scene = new THREE.Scene();
@@ -44,39 +86,20 @@ console.log(b0.toString());
     var dirLight = new THREE.DirectionalLight(0xffffff, 15);
     dirLight.position.set(0, 1, 0);
     scene.add(dirLight);
-    var bone = new LBone('b1', null, 10, 60, new LV3(30,0,0), new LV3(0,-80,0));
-    var bone2 = new LBone('b2', bone, 8, 30, new LV3(10,0,10), new LV3(0,Math.sin(ng/10) * 10, 0));
-    var bone3 = new LBone('b3', bone, 2, 20, new LV3(10,0,-10), new LV3(0,0,Math.sin(ng/80) * 80));
-    scene.add(bone.getModel().tjs({color : 'white'}));
-    scene.add(bone2.getModel().tjs({color : 'red'}));
-    scene.add(bone3.getModel().tjs({color : 'blue'}));
 
-    bb = b0.toString();
-    bb = LBone.fromString(bb);
-    bb.rotation.z = 0;
-    scene.add(b0.getModel().tjs({color : 'orange'}));
-    scene.add(bb.getModel().tjs({color : 'purple'}));
-/*
-    if(cont.drawEditor){
-        var ob = createArm(100);
-        var q = LQt.rotation(cont.x,cont.y,cont.z);
-        ob.verts = ob.verts.map(v => q.multLV3(v))
-        scene.add(ob.tjs({basicShading : true, color : 'green'}))
-    }else{
-        var nt = (new Date()).getTime()
-        var td = ((nt-cont.st)/3000) * Math.PI * 2
-        cont.t += td
-        var ttt = (Math.sin(cont.t) + 1) / 2
-        var ob = createArm(100);
-        var q = cont.q1.copy().interpolateTo(cont.q2.copy(), ttt);
-        ob.verts = ob.verts.map(v => q.multLV3(v))
-        scene.add(ob.tjs({basicShading : true, color : 'red'}))
-        cont.st = nt
-    }
-*/
+
+
+    mySkeleton.bones.forEach(b => {
+          scene.add(b.getModel().tjs({color : 'green'}));
+          var tip = b.tip();
+          scene.add(generateCube({position: [tip.x,tip.y, tip.z], color : 'blue', size:[5, 1, 1]}));
+
+    });
+
+
     var center = new LV3(0,0,0);
     var size = renderer.getSize();
-    var cam = L3DOb.cadCam(size.width, size.height, 90 , 10, 100);
+    var cam = L3DOb.cadCam(size.width, size.height, 90 , 10, 50);
     renderer.render( scene, cam);
     requestAnimationFrame( render );
 })();
