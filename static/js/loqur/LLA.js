@@ -791,6 +791,11 @@ LQt.prototype.toString = function(){
 	return '[' + this.x + ',' + this.y + ',' + this.z + ',' + this.w + ']';
 };
 
+
+LQt.fromJSON = function(ob){
+    return new LQt(ob.x, ob.y, ob.z, ob.w);
+};
+
 LQt.prototype.copy = function(){
     return new LQt(this.x,this.y,this.z,this.w);
 };
@@ -856,6 +861,23 @@ LQt.fromAngles = function(angle1, angle2){
     var rotation_number_2_direction = q1.multLV3(z_axis);
     var q2 = LQt.fromPole(rotation_number_2_direction, angle2);
     return q2;
+};
+
+LQt.fromLMat = function(m){
+	var qw = Math.sqrt(1 + m.at(0,0) + m.at(1,1) + m.at(2,2)) / 2;
+	return new LQt(
+		(m.at(2,1) - m.at(1,2)) / (4*qw),
+		(m.at(0,2) - m.at(2,0)) / (4*qw),
+		(m.at(1,0) - m.at(0,1)) / (4*qw),
+		qw);
+};
+
+LQt.prototype.toLMat4 = function(){
+	return new LMat4([
+    1.0 - 2.0*this.y*this.y - 2.0*this.z*this.z, 2.0*this.x*this.y - 2.0*this.z*this.w, 2.0*this.x*this.z + 2.0*this.y*this.w, 0.0,
+    2.0*this.x*this.y + 2.0*this.z*this.w, 1.0 - 2.0*this.x*this.x - 2.0*this.z*this.z, 2.0*this.y*this.z - 2.0*this.x*this.w, 0.0,
+    2.0*this.x*this.z - 2.0*this.y*this.w, 2.0*this.y*this.z + 2.0*this.x*this.w, 1.0 - 2.0*this.x*this.x - 2.0*this.y*this.y, 0.0,
+    0.0, 0.0, 0.0, 1.0]);
 };
 
 LQt.rotation = function(x, y, z){
