@@ -29,7 +29,17 @@ LBone.fromString = function(s, parent){
 
 //rotate the bone by x,y,z
 LBone.prototype.rotate = function(x,y,z){
-  var rotation = LQt.rotation(x,y,z);
+  var xax = new LV3(1, 0, 0);
+  var yax = new LV3(0, 1, 0);
+  var zax = new LV3(0, 0, 1);
+  var cqt = this.cqt();
+  cqt.multLV3(xax);
+  cqt.multLV3(yax);
+  cqt.multLV3(zax);
+
+
+
+  var rotation = LQt.fromPole(zax, z).mult(LQt.fromPole(yax, y).mult(LQt.fromPole(xax, x)));
   this.qt = rotation.mult(this.qt);
 };
 
